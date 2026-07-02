@@ -12,8 +12,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Loosen for local dev / Streamlit Cloud; tighten to your Streamlit app's
-# origin before going to production.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
