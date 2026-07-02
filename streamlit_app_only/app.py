@@ -30,7 +30,7 @@ STATE_CENTROIDS = {
     "CO": (39.06, -105.31), "VA": (37.77, -78.17), "TN": (35.75, -86.69),
     "SC": (33.84, -81.16), "OR": (43.80, -120.55), "MN": (46.73, -94.69),
 }
-DEFAULT_CENTROID = (39.83, -98.58)  # geographic center of contiguous US
+DEFAULT_CENTROID = (39.83, -98.58)  
 
 WEATHER_DEFAULTS = dict(
     Temperature_F=60.0, Wind_Chill_F=55.0, Humidity=65.0, Pressure_in=29.9,
