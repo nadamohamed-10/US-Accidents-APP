@@ -5,7 +5,7 @@ from datetime import datetime, date, time, timedelta
 st.set_page_config(page_title="US Accidents Predictor", page_icon="🚧", layout="centered")
 
 API_URL = st.sidebar.text_input(
-    "API URL", value="http://127.0.0.1:8000",
+    "API URL", value="https://us-accidents-app-3.onrender.com",
     help="Change this to your deployed API URL once it's live (e.g. Render)."
 )
 
