@@ -5,7 +5,7 @@ from datetime import datetime, date, time, timedelta
 st.set_page_config(page_title="US Accidents Predictor", layout="centered")
 
 API_URL = st.sidebar.text_input(
-    "API URL", value="https://us-accidents-app-3.onrender.com"
+    "API URL", value="https://us-accidents-app-4.onrender.com"
 )
 
 st.title(" US Accidents — Severity & Duration Predictor")
