@@ -34,12 +34,8 @@ def _base_engineering(df: pd.DataFrame, need_duration: bool) -> pd.DataFrame:
         # Severity model uses Duration_Min as an input feature.
         df["Duration_Min"] = (df["End_Time"] - df["Start_Time"]).dt.total_seconds() / 60
         df["Impact_Ratio"] = df["Distance(mi)"] / (df["Duration_Min"] + 1e-6)
-    else:
-        # Duration model is predicting Duration_Min, so it can't be an input.
-        # Impact_Ratio can't use the true duration either -> approximate with
-        # a neutral placeholder (0), consistent with how a "cold start"
-        # request (no known duration yet) would look at inference time.
-        df["Impact_Ratio"] = 0.0
+    # else: nothing to do — the duration model no longer uses Impact_Ratio at all,
+    # since it was leaking the target it's trying to predict.
 
     df["Is_Weekend"] = df["Start_Time"].dt.dayofweek >= 5
     df["Is_Rush_Hour"] = ((~df["Is_Weekend"]) & (df["Start_Hour"].isin([7, 8, 9, 16, 17, 18]))).astype(int)
