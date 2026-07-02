@@ -118,9 +118,6 @@ def show_results(payload):
 tab_quick, tab_advanced = st.tabs([" Quick Predict", " full inputs"])
 
 with tab_quick:
-    st.info("Just the handful of inputs your model's feature-importance analysis "
-            "flagged as high-impact. Everything else uses realistic defaults.")
-
     with st.form("quick_form"):
         c1, c2 = st.columns(2)
         with c1:
@@ -140,7 +137,7 @@ with tab_quick:
         with rc2:
             traffic_signal = st.checkbox("Traffic Signal", key="q_signal")
 
-        quick_submit = st.form_submit_button("🔮 Predict", use_container_width=True)
+        quick_submit = st.form_submit_button(" Predict", use_container_width=True)
 
     if quick_submit:
         payload = build_payload(
@@ -152,7 +149,7 @@ with tab_quick:
 
 with tab_advanced:
     with st.form("advanced_form"):
-        st.subheader("📍 Location & Time")
+        st.subheader(" Location & Time")
         col1, col2 = st.columns(2)
         with col1:
             acc_date = st.date_input("Date", value=date(2026, 1, 15), key="a_date")
