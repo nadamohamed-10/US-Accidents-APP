@@ -56,7 +56,7 @@ def build_payload(*, acc_date, start_time_input, duration_min, state,
         sunrise_sunset, civil_twilight = "Day", "Day"
     elif lighting == "Night":
         sunrise_sunset, civil_twilight = "Night", "Night"
-    else:  # Twilight
+    else:  
         sunrise_sunset, civil_twilight = "Night", "Day"
 
     weather = {**WEATHER_DEFAULTS, **(weather_overrides or {})}
@@ -113,39 +113,6 @@ def show_results(payload):
                 st.warning("Long expected blockage — consider rerouting traffic.")
         except Exception as e:
             st.error(f"Request failed: {e}")
-
-
-tab_quick, tab_advanced = st.tabs([" Quick Predict", " full inputs"])
-
-with tab_quick:
-    with st.form("quick_form"):
-        c1, c2 = st.columns(2)
-        with c1:
-            acc_date = st.date_input("Date", value=date(2026, 1, 15), key="q_date")
-            start_time_input = st.time_input("Time", value=time(8, 30), key="q_time")
-            state = st.selectbox("State", sorted(STATE_CENTROIDS.keys()) + ["Other"], key="q_state")
-        with c2:
-            distance = st.number_input("Distance impacted (mi)", value=1.0, min_value=0.0, key="q_dist")
-            duration_min = st.slider("Estimated blockage duration (min)", 1, 300, 45, key="q_dur",
-                                      help="Drives Impact_Ratio — your notebook's top engineered feature.")
-            lighting = st.selectbox("Lighting", ["Day", "Night", "Twilight"], key="q_light")
-
-        st.markdown("**Road features present**")
-        rc1, rc2 = st.columns(2)
-        with rc1:
-            junction = st.checkbox("Junction", key="q_junction")
-        with rc2:
-            traffic_signal = st.checkbox("Traffic Signal", key="q_signal")
-
-        quick_submit = st.form_submit_button(" Predict", use_container_width=True)
-
-    if quick_submit:
-        payload = build_payload(
-            acc_date=acc_date, start_time_input=start_time_input, duration_min=duration_min,
-            state=(state if state != "Other" else "CA"), distance=distance,
-            junction=junction, traffic_signal=traffic_signal, lighting=lighting,
-        )
-        show_results(payload)
 
 with tab_advanced:
     with st.form("advanced_form"):
