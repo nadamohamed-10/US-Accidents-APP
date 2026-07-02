@@ -2,14 +2,14 @@ import requests
 import streamlit as st
 from datetime import datetime, date, time, timedelta
 
-st.set_page_config(page_title="US Accidents Predictor", page_icon="🚧", layout="centered")
+st.set_page_config(page_title="US Accidents Predictor", layout="centered")
 
 API_URL = st.sidebar.text_input(
     "API URL", value="https://us-accidents-app-3.onrender.com",
     help="Change this to your deployed API URL once it's live (e.g. Render)."
 )
 
-st.title("🚧 US Accidents — Severity & Duration Predictor")
+st.title(" US Accidents — Severity & Duration Predictor")
 st.caption("Enter accident conditions and get a model prediction for severity and expected traffic blockage time.")
 
 with st.sidebar:
@@ -23,9 +23,6 @@ with st.sidebar:
     except Exception:
         st.error("Can't reach the API. Is it running?")
 
-# --- Approximate state centroids (used only as a default lat/lng when the
-# quick form doesn't ask the user to pin an exact location). Good enough for
-# State_Freq-driven predictions; users needing precision should use Advanced. ---
 STATE_CENTROIDS = {
     "CA": (36.78, -119.42), "TX": (31.97, -99.90), "FL": (27.66, -81.52),
     "NY": (42.17, -74.95), "PA": (41.20, -77.19), "IL": (40.35, -88.99),
@@ -36,7 +33,6 @@ STATE_CENTROIDS = {
 }
 DEFAULT_CENTROID = (39.83, -98.58)  # geographic center of contiguous US
 
-# Sensible dataset-typical defaults for fields Quick Predict hides.
 WEATHER_DEFAULTS = dict(
     Temperature_F=60.0, Wind_Chill_F=55.0, Humidity=65.0, Pressure_in=29.9,
     Visibility_mi=9.0, Wind_Speed_mph=7.0, Precipitation_in=0.0,
@@ -94,7 +90,7 @@ def build_payload(*, acc_date, start_time_input, duration_min, state,
 def show_results(payload):
     col_a, col_b = st.columns(2)
     with col_a:
-        st.markdown("### 🎯 Severity")
+        st.markdown("### Severity")
         try:
             r = requests.post(f"{API_URL}/predict/severity", json=payload, timeout=10)
             r.raise_for_status()
@@ -107,7 +103,7 @@ def show_results(payload):
             st.error(f"Request failed: {e}")
 
     with col_b:
-        st.markdown("### ⏱️ Expected Duration")
+        st.markdown("### Expected Duration")
         try:
             dur_payload = {k: v for k, v in payload.items() if k != "End_Time"}
             r = requests.post(f"{API_URL}/predict/duration", json=dur_payload, timeout=10)
@@ -120,16 +116,8 @@ def show_results(payload):
             st.error(f"Request failed: {e}")
 
 
-tab_quick, tab_advanced = st.tabs(["⚡ Quick Predict", "🛠️ Advanced (full inputs)"])
+tab_quick, tab_advanced = st.tabs([" Quick Predict", " full inputs"])
 
-# =============================================================================
-# QUICK PREDICT -- only the fields your notebook's own EDA identified as
-# actually driving the model: rush hour / time-of-day, lighting, road
-# complexity (junction/traffic signal), distance, and an expected duration
-# estimate (feeds Impact_Ratio, the single strongest engineered feature).
-# Weather and exact GPS are defaulted, since your own "Insight" cells show
-# they matter far less than these.
-# =============================================================================
 with tab_quick:
     st.info("Just the handful of inputs your model's feature-importance analysis "
             "flagged as high-impact. Everything else uses realistic defaults.")
@@ -163,10 +151,6 @@ with tab_quick:
         )
         show_results(payload)
 
-# =============================================================================
-# ADVANCED -- full manual control, useful for demoing edge cases / what-if
-# scenarios to the evaluation committee.
-# =============================================================================
 with tab_advanced:
     with st.form("advanced_form"):
         st.subheader("📍 Location & Time")
@@ -184,7 +168,7 @@ with tab_advanced:
             min_value=1, max_value=600, value=60, key="a_dur"
         )
 
-        st.subheader("🌦️ Weather")
+        st.subheader(" Weather")
         col3, col4 = st.columns(2)
         with col3:
             temperature = st.number_input("Temperature (°F)", value=45.0, key="a_temp")
@@ -207,7 +191,7 @@ with tab_advanced:
         sunrise_sunset = st.radio("Sunrise/Sunset", ["Day", "Night"], horizontal=True, key="a_ss")
         civil_twilight = st.radio("Civil Twilight", ["Day", "Night"], horizontal=True, key="a_ct")
 
-        st.subheader("🚦 Road Features Present")
+        st.subheader(" Road Features Present")
         poi_cols = st.columns(4)
         poi_labels = ["Junction", "Traffic_Signal", "Crossing", "Stop",
                       "Amenity", "Bump", "Give_Way", "No_Exit",
@@ -217,7 +201,7 @@ with tab_advanced:
             with poi_cols[i % 4]:
                 poi_values[label] = st.checkbox(label.replace("_", " "), key=f"a_{label}")
 
-        adv_submit = st.form_submit_button("🔮 Predict", use_container_width=True)
+        adv_submit = st.form_submit_button(" Predict", use_container_width=True)
 
     if adv_submit:
         start_dt = datetime.combine(acc_date, start_time_input)
