@@ -1,15 +1,3 @@
-"""
-Feature engineering for inference.
-
-This intentionally mirrors, step by step, the transformations from the
-training notebook (engineer_features -> add_environment_features -> OHE ->
-frequency encoding -> scaling), so a single accident record produces the
-same feature vector shape/values a training row would have had.
-
-Kept as plain functions (no sklearn Pipeline) on purpose: it matches the
-notebook's structure almost 1:1, which makes it easy to audit against the
-notebook if the model is retrained later.
-"""
 import numpy as np
 import pandas as pd
 
@@ -79,12 +67,7 @@ def build_feature_vector(
     cols_to_scale: list,
     scaler,
 ) -> pd.DataFrame:
-    """
-    task: "severity" or "duration"
-    Returns a single-row DataFrame with columns exactly matching
-    `feature_columns` (the training-time column order), ready for
-    model.predict().
-    """
+   
     need_duration = task == "severity"
     if need_duration and record.get("End_Time") is None:
         raise ValueError("End_Time is required for severity prediction (used to derive Duration_Min).")
@@ -96,10 +79,6 @@ def build_feature_vector(
 
     df = _base_engineering(df, need_duration=need_duration)
 
-    # One-hot encode, matching training's drop_first=True behavior. Since we
-    # can't drop_first on a single row reliably, we instead build every
-    # possible dummy column implied by feature_columns and set the right one
-    # to 1 -- equivalent result, robust for a single record.
     for base_col in OHE_COLS:
         val = df.at[0, base_col]
         dummy_col = f"{base_col}_{val}"
@@ -107,21 +86,14 @@ def build_feature_vector(
             if col.startswith(f"{base_col}_"):
                 df[col] = 1 if col == dummy_col else 0
 
-    # Frequency encoding using the maps captured at training time. Unseen
-    # categories fall back to the mean frequency, same as the notebook does
-    # for the test set.
     for col in FREQ_COLS:
         fmap = freq_maps.get(col, {})
         mean_freq = float(np.mean(list(fmap.values()))) if fmap else 0.0
         raw_val = df.at[0, col]
         df[f"{col}_Freq"] = fmap.get(raw_val, mean_freq)
 
-    # Scale numeric columns with the fitted scaler (same columns/order used at fit time).
     present_scale_cols = [c for c in cols_to_scale if c in df.columns]
     df[present_scale_cols] = scaler.transform(df[present_scale_cols])
 
-    # Reindex to the exact trained column set/order. Anything the pipeline
-    # didn't produce (e.g. a dummy for a category never seen in training)
-    # is filled with 0, mirroring how pd.get_dummies would have handled it.
     out = df.reindex(columns=feature_columns, fill_value=0)
     return out
