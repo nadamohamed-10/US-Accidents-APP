@@ -125,8 +125,7 @@ with tab_quick:
             state = st.selectbox("State", sorted(STATE_CENTROIDS.keys()) + ["Other"], key="q_state")
         with c2:
             distance = st.number_input("Distance impacted (mi)", value=1.0, min_value=0.0, key="q_dist")
-            duration_min = st.slider("Estimated blockage duration (min)", 1, 300, 45, key="q_dur",
-                                      help="Drives Impact_Ratio — your notebook's top engineered feature.")
+            duration_min = 80.1
             lighting = st.selectbox("Lighting", ["Day", "Night", "Twilight"], key="q_light")
 
         st.markdown("**Road features present**")
