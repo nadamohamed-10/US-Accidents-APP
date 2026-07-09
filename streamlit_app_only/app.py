@@ -125,7 +125,7 @@ with tab_quick:
             state = st.selectbox("State", sorted(STATE_CENTROIDS.keys()) + ["Other"], key="q_state")
         with c2:
             distance = st.number_input("Distance impacted (mi)", value=1.0, min_value=0.0, key="q_dist")
-            duration_min = 80.1
+            duration_min = 40
             lighting = st.selectbox("Lighting", ["Day", "Night", "Twilight"], key="q_light")
 
         st.markdown("**Road features present**")
@@ -155,7 +155,7 @@ with tab_advanced:
         with col2:
             start_time_input = st.time_input("Start time", value=time(8, 30), key="a_time")
             start_lng = st.number_input("Longitude", value=-118.25, format="%.4f", key="a_lng")
-            duration_min = 80.1
+            duration_min = 40
 
 
         st.subheader(" Weather")
