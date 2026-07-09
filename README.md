@@ -12,9 +12,7 @@ us-accidents-api/
 │   ├── schemas.py          
 │   ├── preprocessing.py   
 │   └── model_loader.py     
-├── saved_models/           
-├── tests/
-│   └── test_api.py        
+├── saved_models/                   
 ├── requirements.txt
 ├── Dockerfile
 ├── .dockerignore
