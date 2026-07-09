@@ -155,11 +155,8 @@ with tab_advanced:
         with col2:
             start_time_input = st.time_input("Start time", value=time(8, 30), key="a_time")
             start_lng = st.number_input("Longitude", value=-118.25, format="%.4f", key="a_lng")
+            duration_min = 80.1
 
-        duration_min = st.slider(
-            "Estimated duration (minutes) — only used for severity prediction",
-            min_value=1, max_value=600, value=60, key="a_dur"
-        )
 
         st.subheader(" Weather")
         col3, col4 = st.columns(2)
